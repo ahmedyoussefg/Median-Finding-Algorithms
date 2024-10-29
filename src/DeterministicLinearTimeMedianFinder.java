@@ -12,40 +12,44 @@ public class DeterministicLinearTimeMedianFinder extends MedianFinder {
 
     @Override
     public int select(int l, int r, int k) {
-        if (r-l+1 <= 5) {
-            Arrays.sort(dataPoints, l, r + 1);
-            return dataPoints[l + k];
+        return select(this.dataPoints, k);
+    }
+
+    public int select(int [] arr, int k) {
+        if (arr.length <= 5) {
+            Arrays.sort(arr);
+            return arr[arr.length / 2 - 1 + (arr.length % 2)];
         }
-        int [] oldDataPoints = Arrays.copyOf(this.dataPoints,this.dataPoints.length);
-        int c = 0;
-        for (int i = l; i <= r; i += 5) {
+        List<Integer> mediansList = new ArrayList<>();
+        for (int i = 0; i < arr.length; i += 5) {
             List<Integer> five = new ArrayList<>();
-            for (int j = i; j < i + 5 && j <= r; j++) {
-                five.add(this.dataPoints[j]);
+            for (int j = i; j < i + 5 && j < arr.length; j++) {
+                five.add(arr[j]);
             }
             Collections.sort(five);
-            this.dataPoints[c]=five.get(five.size() / 2 - 1 + (five.size() % 2));
-            c++;
+            mediansList.add( five.get(five.size() / 2 - 1 + (five.size() % 2)) );
         }
-        int medianOfMedians = select(l, l+c-1, l+(c/2)-1+(c%2));
+        int [] medians = new int[mediansList.size()];
+        for (int i = 0; i < medians.length; i++){
+            medians[i] = mediansList.get(i);
+        }
+        int medianOfMedians = select(medians, medians.length / 2 - 1 +( medians.length% 2));
         int pivotIndex = 0;
-        this.dataPoints=oldDataPoints;
-        for (int i = l; i <= r; i++){
-            if (this.dataPoints[i]==medianOfMedians){
+        for (int i = 0; i < arr.length; i++){
+            if (arr[i]==medianOfMedians){
                 pivotIndex=i;
             }
         }
-        this.swap(pivotIndex, l);
-        int m = this.partition(l, r);
-        int p = m - l;
-        if (k == p ){
+        this.swap(arr, pivotIndex, 0);
+        int m = this.partition(arr,0, arr.length);
+        if (k == m ){
             return medianOfMedians;
-        }
-        else if (k < p) {
-            return select(l, pivotIndex-1, k);
-        }
-        else {
-            return select(pivotIndex+1, r, k-p-1);
+        } else if (k < m) {
+            // Search in the left partition
+            return select(Arrays.copyOfRange(arr, 0, pivotIndex), k);
+        } else {
+            // Search in the right partition
+            return select(Arrays.copyOfRange(arr, pivotIndex + 1, arr.length), k - m - 1);
         }
     }
 }
