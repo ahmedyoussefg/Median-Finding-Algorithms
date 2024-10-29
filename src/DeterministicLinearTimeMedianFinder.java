@@ -24,10 +24,10 @@ public class DeterministicLinearTimeMedianFinder extends MedianFinder {
                 five.add(this.dataPoints[j]);
             }
             Collections.sort(five);
-            this.dataPoints[c]=five.get(five.size() / 2 - 1 + (five.size() % 2));
+            this.dataPoints[l+c]=five.get(five.size() / 2 - 1 + (five.size() % 2));
             c++;
         }
-        int medianOfMedians = select(l, l+c-1, l+(c/2)-1+(c%2));
+        int medianOfMedians = select(l, l+c-1, (c/2)-1+(c%2));
         int pivotIndex = 0;
         this.dataPoints=oldDataPoints;
         for (int i = l; i <= r; i++){
