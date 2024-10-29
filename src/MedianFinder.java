@@ -13,22 +13,22 @@ public abstract class MedianFinder {
         return select(0, n - 1, n / 2 - 1 + (n%2));
     }
 
-    protected int partition(int [] arr, int l, int r) {
+    protected int partition(int l, int r) {
         int i = l;
         for (int j = l+1; j <= r ; j++) {
-            if (arr[j] <= arr[l]) {
+            if (this.dataPoints[j] <= this.dataPoints[l]) {
                 i++;
-                swap(arr, i, j);
+                swap(i, j);
             }
         }
-        swap(arr, i, l);
+        swap(i, l);
         return i;
     }
 
-    protected void swap(int[] arr, int i, int j) {
-        int temp = arr[i];
-        arr[i] = arr[j];
-        arr[j] = temp;
+    protected void swap(int i, int j) {
+        int temp = this.dataPoints[i];
+        this.dataPoints[i] = this.dataPoints[j];
+        this.dataPoints[j] = temp;
     }
 
     public void setDataPoints(int[] dataPoints) {

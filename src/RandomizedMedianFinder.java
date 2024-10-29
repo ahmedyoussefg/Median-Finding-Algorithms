@@ -26,7 +26,7 @@ public class RandomizedMedianFinder extends MedianFinder {
 
     private int randomizedPartition(int l, int r) {
         int pivotIndex = this.rand.nextInt(r - l) + l;
-        this.swap(this.dataPoints, pivotIndex, l);
-        return this.partition(this.dataPoints, l, r);
+        this.swap(pivotIndex, l);
+        return this.partition(l, r);
     }
 }
