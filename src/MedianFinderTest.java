@@ -81,6 +81,8 @@ public class MedianFinderTest {
         assertEquals(expected, medianFinder.getMedian());
         medianFinder = new NaiveMedianFinder(arr);
         assertEquals(expected, medianFinder.getMedian());
+        medianFinder = new DeterministicLinearTimeMedianFinder(arr);
+        assertEquals(expected, medianFinder.getMedian());
     }
 
     private void shuffleArray(int[] arr) {

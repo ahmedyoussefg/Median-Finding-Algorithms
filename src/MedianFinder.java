@@ -12,6 +12,7 @@ public abstract class MedianFinder {
         int n = this.dataPoints.length;
         return select(0, n - 1, n / 2 - 1 + (n%2));
     }
+
     protected int partition(int l, int r) {
         int i = l;
         for (int j = l+1; j <= r ; j++) {
