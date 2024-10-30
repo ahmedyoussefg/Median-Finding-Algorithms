@@ -16,36 +16,37 @@ public class DeterministicLinearTimeMedianFinder extends MedianFinder {
             Arrays.sort(dataPoints, l, r + 1);
             return dataPoints[l + k];
         }
-        int [] oldDataPoints = Arrays.copyOf(this.dataPoints,this.dataPoints.length);
-        int c = 0;
+        List<Integer> mediansList = new ArrayList<>();
         for (int i = l; i <= r; i += 5) {
             List<Integer> five = new ArrayList<>();
             for (int j = i; j < i + 5 && j <= r; j++) {
                 five.add(this.dataPoints[j]);
             }
             Collections.sort(five);
-            this.dataPoints[l+c]=five.get(five.size() / 2 - 1 + (five.size() % 2));
-            c++;
+            mediansList.add ( five.get(five.size() / 2 - 1 + (five.size() % 2)) );
         }
-        int medianOfMedians = select(l, l+c-1, (c/2)-1+(c%2));
+        int[] medians = mediansList.stream().mapToInt(Integer::intValue).toArray();
+        int medianOfMedians = new DeterministicLinearTimeMedianFinder(medians).getMedian();
+
         int pivotIndex = 0;
-        this.dataPoints=oldDataPoints;
         for (int i = l; i <= r; i++){
             if (this.dataPoints[i]==medianOfMedians){
                 pivotIndex=i;
+                break;
             }
         }
         this.swap(pivotIndex, l);
-        int m = this.partition(l, r);
-        int p = m - l;
-        if (k == p ){
-            return medianOfMedians;
+        int[] m = this.partition(l, r);
+        int rankMax = m[1]-l;
+        int rankMin = m[0]-l;
+        if (k >= rankMin && k<= rankMax) {
+            return this.dataPoints[m[0]];
         }
-        else if (k < p) {
-            return select(l, pivotIndex-1, k);
+        else if (k < rankMin) {
+            return select(l, m[0] - 1 , k);
         }
         else {
-            return select(pivotIndex+1, r, k-p-1);
+            return select(m[1] + 1, r, k - rankMax - 1);
         }
     }
 }
