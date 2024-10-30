@@ -17,23 +17,21 @@ public class DeterministicLinearTimeMedianFinder extends MedianFinder {
             Arrays.sort(dataPoints, l, r + 1);
             return dataPoints[l + k];
         }
-        List<Integer> mediansList = new ArrayList<>();
+        int numOfMedians = (r - l + 1 + 4) / 5;
+        int[] medians = new int[numOfMedians];
+        // counter for number of medians
+        int cnt = 0;
         for (int i = l; i <= r; i += 5) {
-            List<Integer> five = new ArrayList<>();
             // we get the 5 elements that include ith element
-            for (int j = i; j < i + 5 && j <= r; j++) {
-                five.add(this.dataPoints[j]);
-            }
-            Collections.sort(five);
+            int [] five = Arrays.copyOfRange(dataPoints, i, Math.min(i + 5, r + 1));
+            Arrays.sort(five);
             // add the median of the five elements
             // (they might be less than five if the array length is not divisible by 5)
-            mediansList.add ( five.get(five.size() / 2 - 1 + (five.size() % 2)) );
+            medians[cnt++]= ( five[five.length / 2 - 1 + (five.length % 2)] );
         }
-        // convert the List<Integer> to int[]
-        int[] medians = mediansList.stream().mapToInt(Integer::intValue).toArray();
-
-        // get the median of medians by recursive call with but with new array "medians" which has length n/5
-        int medianOfMedians = new DeterministicLinearTimeMedianFinder(medians).getMedian();
+        int[] exactMedians = Arrays.copyOf(medians, cnt);
+        // get the median of medians by recursive call with but with new array "medians" which has approx length n/5
+        int medianOfMedians = new DeterministicLinearTimeMedianFinder(exactMedians).getMedian();
 
         // we partition the data points around the median of medians, into 3 groups [..less than..|..equal..|..greater..than]
         int pivotIndex = 0;
