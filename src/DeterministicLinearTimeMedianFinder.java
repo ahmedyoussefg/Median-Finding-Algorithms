@@ -16,7 +16,6 @@ public class DeterministicLinearTimeMedianFinder extends MedianFinder {
             // if we have less than 5 elements, we naively get the kth element
             Arrays.sort(dataPoints, l, r + 1);
             return dataPoints[l + k];
-        }
         List<Integer> mediansList = new ArrayList<>();
         for (int i = l; i <= r; i += 5) {
             List<Integer> five = new ArrayList<>();
